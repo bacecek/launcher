@@ -9,18 +9,20 @@ androidx-lifecycle = "2.7.0"
 [libraries]
 accompanist-drawable = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.12.0" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version = "1.1.5" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.8.2" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2024.01.00" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.12.0" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version = "1.1.5" }
+
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
 junit = { group = "junit", name = "junit", version = "4.13.2" }
 
