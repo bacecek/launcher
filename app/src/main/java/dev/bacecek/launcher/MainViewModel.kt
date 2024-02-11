@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 
 private const val DEFAULT_GRID_SIZE = 4
 
+@Suppress("StaticFieldLeak")
 class MainViewModel(
     private val context: Context,
 ) : ViewModel() {
@@ -95,6 +96,6 @@ class MainViewModelFactory(
     private val context: Context,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel(context) as T
+        return MainViewModel(context.applicationContext) as T
     }
 }
