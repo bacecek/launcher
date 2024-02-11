@@ -119,7 +119,7 @@ fun RecentApps(
     Divider()
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 8.dp),
     ) {
         recents.value.forEach {
             App(appInfo = it,
