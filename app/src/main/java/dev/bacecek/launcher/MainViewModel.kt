@@ -60,6 +60,7 @@ class MainViewModel(
             .asSequence()
             .flatMap { launcherApps.getActivityList(null, it) }
             .filter { it.applicationInfo.packageName != BuildConfig.APPLICATION_ID }
+            .filter { !FILTERED_COMPONENTS.contains(it.componentName) }
             .map { app ->
                 AppInfo(
                     app.label.toString(),
@@ -88,6 +89,14 @@ class MainViewModel(
         component?.let {
             launcher.startMainActivity(it, appInfo.user, null, null)
         }
+    }
+
+    companion object {
+        private val FILTERED_COMPONENTS = listOf(
+            "com.google.android.googlequicksearchbox/.VoiceSearchActivity",
+            "com.google.android.launcher/.StubApp",
+            "com.google.android.as/com.google.android.apps.miphone.aiai.allapps.main.MainDummyActivity",
+        ).map { ComponentName.unflattenFromString(it) }.toSet()
     }
 
 }
