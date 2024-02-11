@@ -2,7 +2,10 @@ package dev.bacecek.launcher
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherApps
+import android.net.Uri
 import android.os.UserManager
 import androidx.core.content.getSystemService
 import androidx.lifecycle.ViewModel
@@ -52,6 +55,14 @@ class MainViewModel(
         }
     }
 
+    fun onAppInfoClicked(appInfo: AppInfo) {
+        openAppInfo(appInfo)
+    }
+
+    fun onAppUninstallClicked(appInfo: AppInfo) {
+        uninstall(appInfo)
+    }
+
     private fun loadAppList(): List<AppInfo> {
         val userManager = requireNotNull(context.getSystemService<UserManager>())
         val launcherApps = requireNotNull(context.getSystemService<LauncherApps>())
@@ -63,15 +74,29 @@ class MainViewModel(
             .filter { !FILTERED_COMPONENTS.contains(it.componentName) }
             .map { app ->
                 AppInfo(
-                    app.label.toString(),
-                    app.getIcon(0),
-                    app.applicationInfo.packageName,
-                    app.componentName.className,
-                    app.user,
+                    name = app.label.toString(),
+                    icon = app.getIcon(0),
+                    packageName = app.applicationInfo.packageName,
+                    activityClassName = app.componentName.className,
+                    component = app.componentName,
+                    user = app.user,
+                    isSystemApp = context.isSystemApp(app.applicationInfo.packageName)
                 )
             }
             .sortedBy { it.name }
             .toList()
+    }
+
+    private fun Context.isSystemApp(packageName: String): Boolean {
+        if (packageName.isBlank()) return true
+        return try {
+            val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+            ((applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0)
+                    || (applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 
     private fun launchApp(appInfo: AppInfo) {
@@ -89,6 +114,19 @@ class MainViewModel(
         component?.let {
             launcher.startMainActivity(it, appInfo.user, null, null)
         }
+    }
+
+    private fun uninstall(appInfo: AppInfo) {
+        val intent = Intent(Intent.ACTION_DELETE).apply {
+            data = Uri.parse("package:${appInfo.packageName}")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+    }
+
+    private fun openAppInfo(appInfo: AppInfo) {
+        val launcher = requireNotNull(context.getSystemService<LauncherApps>())
+        launcher.startAppDetailsActivity(appInfo.component, appInfo.user, null, null)
     }
 
     companion object {

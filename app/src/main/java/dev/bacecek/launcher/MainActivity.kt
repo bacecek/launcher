@@ -1,14 +1,13 @@
 package dev.bacecek.launcher
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.UserHandle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,20 +20,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
 
@@ -77,11 +83,15 @@ fun AppListScreen(
             apps = appList,
             gridSize = gridSize,
             onAppClicked = { viewModel.onAppClicked(it) },
+            onAppInfoClicked = { viewModel.onAppInfoClicked(it) },
+            onAppUninstallClicked = { viewModel.onAppUninstallClicked(it) },
             modifier = Modifier.weight(1f)
         )
         RecentApps(
             recents = recents,
             onAppClicked = { viewModel.onAppClicked(it) },
+            onAppInfoClicked = { viewModel.onAppInfoClicked(it) },
+            onAppUninstallClicked = { viewModel.onAppUninstallClicked(it) },
         )
     }
 }
@@ -91,7 +101,9 @@ fun AppsGrid(
     apps: State<List<AppInfo>>,
     gridSize: State<Int>,
     modifier: Modifier,
-    onAppClicked: (AppInfo) -> Unit = {},
+    onAppClicked: (AppInfo) -> Unit,
+    onAppUninstallClicked: (AppInfo) -> Unit,
+    onAppInfoClicked: (AppInfo) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(gridSize.value),
@@ -105,6 +117,8 @@ fun AppsGrid(
             App(
                 appInfo = it,
                 onAppClicked = onAppClicked,
+                onAppInfoClicked = onAppInfoClicked,
+                onAppUninstallClicked = onAppUninstallClicked,
                 isTitleVisible = true,
             )
         }
@@ -114,16 +128,22 @@ fun AppsGrid(
 @Composable
 fun RecentApps(
     recents: State<List<AppInfo>>,
-    onAppClicked: (AppInfo) -> Unit = {},
+    onAppClicked: (AppInfo) -> Unit,
+    onAppUninstallClicked: (AppInfo) -> Unit,
+    onAppInfoClicked: (AppInfo) -> Unit,
 ) {
     Divider()
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 8.dp),
     ) {
         recents.value.forEach {
             App(appInfo = it,
                 onAppClicked = onAppClicked,
+                onAppInfoClicked = onAppInfoClicked,
+                onAppUninstallClicked = onAppUninstallClicked,
                 isTitleVisible = false,
                 modifier = Modifier.weight(1f)
             )
@@ -131,20 +151,25 @@ fun RecentApps(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun App(
     modifier: Modifier = Modifier,
     appInfo: AppInfo,
-    onAppClicked: (AppInfo) -> Unit = {},
+    onAppClicked: (AppInfo) -> Unit,
+    onAppUninstallClicked: (AppInfo) -> Unit,
+    onAppInfoClicked: (AppInfo) -> Unit,
     isTitleVisible: Boolean,
 ) {
+    var appInfoDialogState by remember { mutableStateOf(false) }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .clickable {
-                onAppClicked(appInfo)
-            }
+            .combinedClickable(
+                onLongClick = { appInfoDialogState = true },
+                onClick = { onAppClicked(appInfo) },
+            )
             .then(modifier)
     ) {
         Image(
@@ -165,13 +190,53 @@ fun App(
             )
         }
     }
+    if (appInfoDialogState) {
+        AppInfoTooltip(
+            appInfo,
+            onAppInfoClicked = {
+                appInfoDialogState = false
+                onAppInfoClicked(appInfo)
+            },
+            onAppUninstallClicked = {
+                appInfoDialogState = false
+                onAppUninstallClicked(appInfo)
+            },
+            onDismiss = { appInfoDialogState = false },
+        )
+    }
 }
 
-@Stable
-data class AppInfo(
-    val name: String,
-    val icon: Drawable?,
-    val packageName: String,
-    val activityClassName: String?,
-    val user: UserHandle,
-)
+@Composable
+fun AppInfoTooltip(
+    appInfo: AppInfo,
+    onAppInfoClicked: () -> Unit,
+    onAppUninstallClicked: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Column {
+                AppInfoDialogButton(text = "App info", onClick = onAppInfoClicked)
+                if (!appInfo.isSystemApp) {
+                    AppInfoDialogButton(text = "Uninstall", onClick = onAppUninstallClicked)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AppInfoDialogButton(
+    text: String,
+    onClick: () -> Unit,
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().height(48.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Text(text = text)
+    }
+}
