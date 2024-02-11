@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.os.UserManager
+import androidx.core.content.getSystemService
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -45,15 +46,15 @@ class MainViewModel(
     }
 
     fun onAppClicked(appInfo: AppInfo) {
-        context.launchApp(appInfo)
+        launchApp(appInfo)
         viewModelScope.launch {
             recentsDataSource.onAppUsed(appInfo)
         }
     }
 
     private fun loadAppList(): List<AppInfo> {
-        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
-        val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+        val userManager = requireNotNull(context.getSystemService<UserManager>())
+        val launcherApps = requireNotNull(context.getSystemService<LauncherApps>())
 
         return userManager.userProfiles
             .asSequence()
@@ -72,8 +73,8 @@ class MainViewModel(
             .toList()
     }
 
-    fun Context.launchApp(appInfo: AppInfo) {
-        val launcher = getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+    private fun launchApp(appInfo: AppInfo) {
+        val launcher = requireNotNull(context.getSystemService<LauncherApps>())
 
         val component = if (appInfo.activityClassName.isNullOrBlank()) {
             val activities = launcher.getActivityList(appInfo.packageName, appInfo.user)
