@@ -1,12 +1,15 @@
 package dev.bacecek.launcher
 
 import android.os.Bundle
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,14 +55,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         enableEdgeToEdge()
         setContent {
-            ApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            ApplicationTheme(dynamicColor = false) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                ) { innerPadding ->
                     Surface(
                         modifier = Modifier
                             .padding(innerPadding)
-                            .padding(start = 24.dp, end = 24.dp, top = 32.dp)
+                            .padding(start = 24.dp, end = 24.dp, top = 32.dp),
                     ) {
                         AppListScreen(viewModel)
                     }
@@ -133,7 +140,7 @@ fun RecentApps(
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
 ) {
-    HorizontalDivider()
+    HorizontalDivider(color = Color(0x25000000))
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
