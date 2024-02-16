@@ -22,7 +22,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -132,7 +132,7 @@ fun RecentApps(
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
 ) {
-    Divider()
+    HorizontalDivider()
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
