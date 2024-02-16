@@ -17,7 +17,7 @@ class RecentUsedDataSource(
 
     val recentUsedApps: Flow<Map<String, Long>> = context.dataStore
         .data
-        .map {  preferences ->
+        .map { preferences ->
             preferences.asMap()
                 .mapKeys { it.key.name }
                 .mapValues { it.value as Long }

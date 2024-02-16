@@ -55,9 +55,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             ApplicationTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Surface(modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(start = 24.dp, end = 24.dp, top = 32.dp)
+                    Surface(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .padding(start = 24.dp, end = 24.dp, top = 32.dp)
                     ) {
                         AppListScreen(viewModel)
                     }
@@ -140,7 +141,8 @@ fun RecentApps(
             .padding(top = 8.dp, bottom = 8.dp),
     ) {
         recents.value.forEach {
-            App(appInfo = it,
+            App(
+                appInfo = it,
                 onAppClicked = onAppClicked,
                 onAppInfoClicked = onAppInfoClicked,
                 onAppUninstallClicked = onAppUninstallClicked,
@@ -234,7 +236,9 @@ fun AppInfoDialogButton(
 ) {
     TextButton(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().height(48.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp),
         shape = RoundedCornerShape(16.dp),
     ) {
         Text(text = text)
