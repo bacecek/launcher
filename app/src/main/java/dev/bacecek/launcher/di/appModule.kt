@@ -1,8 +1,6 @@
 package dev.bacecek.launcher.di
 
 import dev.bacecek.launcher.AppListViewModel
-import dev.bacecek.launcher.InstalledAppsSource
-import dev.bacecek.launcher.InstalledAppsSourceImpl
 import dev.bacecek.launcher.LauncherAppsFacade
 import dev.bacecek.launcher.LauncherAppsFacadeImpl
 import dev.bacecek.launcher.recent.RecentsDataSource
@@ -13,10 +11,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    single<InstalledAppsSource> { InstalledAppsSourceImpl(get()) }
     single<LauncherAppsFacade> { LauncherAppsFacadeImpl(get()) }
     single<RecentsDataSource> { RecentsDataSourceImpl(get()) }
     single<SettingsDataStore> { SettingsDataStoreImpl(get()) }
 
-    viewModel { AppListViewModel(get(), get(), get(), get()) }
+    viewModel { AppListViewModel(get(), get(), get()) }
 }

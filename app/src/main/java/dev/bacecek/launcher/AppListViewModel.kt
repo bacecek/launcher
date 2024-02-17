@@ -18,15 +18,15 @@ class AppListViewModel(
     private val launcherAppsFacade: LauncherAppsFacade,
     private val recentsDataSource: RecentsDataSource,
     settingsDataSource: SettingsDataStore,
-    private val installedAppsSource: InstalledAppsSource,
 ) : ViewModel() {
 
     val gridSize: StateFlow<Int> = settingsDataSource.gridSize.map {
         it ?: DEFAULT_GRID_SIZE
     }.stateIn(viewModelScope, SharingStarted.Lazily, DEFAULT_GRID_SIZE)
 
-    val apps: StateFlow<List<AppInfo>>
-        get() = installedAppsSource.apps
+    val apps: StateFlow<List<AppInfo>> = launcherAppsFacade.apps.map {
+        it.sortedBy { it.name }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val recents: Flow<List<AppInfo>> = combine(
         recentsDataSource.recentUsedApps,

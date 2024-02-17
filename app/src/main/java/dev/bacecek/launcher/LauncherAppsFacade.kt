@@ -4,11 +4,28 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
+import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.UserHandle
 import android.os.UserManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+
+data class AppInfo(
+    val name: String,
+    val icon: Drawable?,
+    val packageName: String,
+    val activityClassName: String?,
+    val component: ComponentName,
+    val user: UserHandle,
+    val isSystemApp: Boolean,
+)
 
 interface LauncherAppsFacade {
+    val apps: Flow<List<AppInfo>>
     fun launchApp(appInfo: AppInfo)
     fun uninstall(appInfo: AppInfo)
     fun openAppInfo(appInfo: AppInfo)
@@ -22,6 +39,65 @@ internal class LauncherAppsFacadeImpl(
         get() = context.requireSystemService()
     private val launcherApps: LauncherApps
         get() = context.requireSystemService()
+
+    init {
+        launcherApps.registerCallback(object : LauncherApps.Callback() {
+            override fun onPackageRemoved(packageName: String, user: UserHandle) {
+                _apps.value = _apps.value.filter { it.packageName != packageName }
+            }
+
+            override fun onPackageAdded(packageName: String, user: UserHandle) {
+                val newData = launcherApps.getActivityList(packageName, user).map { it.toAppInfo(context) }
+                _apps.value = _apps.value.plus(newData)
+            }
+
+            override fun onPackageChanged(packageName: String, user: UserHandle) {
+                val newData = launcherApps.getActivityList(packageName, user).map { it.toAppInfo(context) }
+                _apps.value = _apps.value.filter { it.packageName != packageName }
+                    .plus(newData)
+            }
+
+            override fun onPackagesAvailable(
+                packageNames: Array<out String>,
+                user: UserHandle,
+                replacing: Boolean
+            ) {
+                packageNames.forEach {
+                    if (replacing) {
+                        onPackageChanged(it, user)
+                    } else {
+                        onPackageAdded(it, user)
+                    }
+                }
+            }
+
+            override fun onPackagesUnavailable(
+                packageNames: Array<out String>,
+                user: UserHandle,
+                replacing: Boolean
+            ) {
+                packageNames.forEach {
+                    if (replacing) {
+                        onPackageChanged(it, user)
+                    } else {
+                        onPackageRemoved(it, user)
+                    }
+                }
+            }
+
+        })
+    }
+
+    private val _apps = MutableStateFlow(loadAppList())
+    override val apps: Flow<List<AppInfo>> = _apps
+
+    private fun loadAppList(): List<AppInfo> {
+        return loadInstalledApps()
+            .asSequence()
+            .filter { it.packageName != BuildConfig.APPLICATION_ID }
+            .filter { !FILTERED_COMPONENTS.contains(it.component) }
+            .toList()
+    }
 
     override fun launchApp(appInfo: AppInfo) {
         val component = if (appInfo.activityClassName.isNullOrBlank()) {
@@ -52,19 +128,19 @@ internal class LauncherAppsFacadeImpl(
         return userManager.userProfiles
             .asSequence()
             .flatMap { launcherApps.getActivityList(null, it) }
-            .map { app ->
-                AppInfo(
-                    name = app.label.toString(),
-                    icon = app.getIcon(0),
-                    packageName = app.applicationInfo.packageName,
-                    activityClassName = app.componentName.className,
-                    component = app.componentName,
-                    user = app.user,
-                    isSystemApp = context.isSystemApp(app.applicationInfo.packageName)
-                )
-            }
+            .map { it.toAppInfo(context)}
             .toList()
     }
+
+    private fun LauncherActivityInfo.toAppInfo(context: Context) = AppInfo(
+        name = label.toString(),
+        icon = getIcon(0),
+        packageName = applicationInfo.packageName,
+        activityClassName = componentName.className,
+        component = componentName,
+        user = user,
+        isSystemApp = context.isSystemApp(applicationInfo.packageName)
+    )
 
     private fun Context.isSystemApp(packageName: String): Boolean {
         if (packageName.isBlank()) return true
@@ -76,6 +152,14 @@ internal class LauncherAppsFacadeImpl(
             e.printStackTrace()
             false
         }
+    }
+
+    companion object {
+        private val FILTERED_COMPONENTS = listOf(
+            "com.google.android.googlequicksearchbox/.VoiceSearchActivity",
+            "com.google.android.launcher/.StubApp",
+            "com.google.android.as/com.google.android.apps.miphone.aiai.allapps.main.MainDummyActivity",
+        ).map { ComponentName.unflattenFromString(it) }.toSet()
     }
 
 }
