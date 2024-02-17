@@ -10,16 +10,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
@@ -99,6 +100,7 @@ fun AppListScreen() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppsGrid(
     apps: State<List<AppInfo>>,
@@ -116,8 +118,12 @@ fun AppsGrid(
             .fillMaxWidth()
             .then(modifier)
     ) {
-        items(apps.value) {
+        items(
+            apps.value,
+            key = { it.component },
+        ) {
             App(
+                modifier = Modifier.animateItemPlacement(),
                 appInfo = it,
                 onAppClicked = onAppClicked,
                 onAppInfoClicked = onAppInfoClicked,
@@ -128,6 +134,7 @@ fun AppsGrid(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecentApps(
     recents: State<List<AppInfo>>,
@@ -136,20 +143,25 @@ fun RecentApps(
     onAppInfoClicked: (AppInfo) -> Unit,
 ) {
     HorizontalDivider(color = Color(0x25000000))
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 8.dp),
+        userScrollEnabled = false,
     ) {
-        recents.value.forEach {
+        items(
+            recents.value,
+            key = { it.component },
+        ) {
             App(
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .fillParentMaxWidth(1f / recents.value.size),
                 appInfo = it,
                 onAppClicked = onAppClicked,
                 onAppInfoClicked = onAppInfoClicked,
                 onAppUninstallClicked = onAppUninstallClicked,
                 isTitleVisible = false,
-                modifier = Modifier.weight(1f)
             )
         }
     }
