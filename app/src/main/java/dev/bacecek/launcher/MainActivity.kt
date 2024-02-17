@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -78,12 +79,15 @@ class MainActivity : ComponentActivity() {
     override fun onBackPressed() = Unit
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppListScreen() {
     val viewModel = koinViewModel<AppListViewModel>()
     val appList = viewModel.apps.collectAsState()
     val gridSize = viewModel.gridSize.collectAsState()
     val recents = viewModel.recents.collectAsState(initial = emptyList())
+
+    var showMenuDialog by remember { mutableStateOf(false) }
 
     Column {
         AppsGrid(
@@ -92,13 +96,28 @@ fun AppListScreen() {
             onAppClicked = { viewModel.onAppClicked(it) },
             onAppInfoClicked = { viewModel.onAppInfoClicked(it) },
             onAppUninstallClicked = { viewModel.onAppUninstallClicked(it) },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .combinedClickable(
+                    onLongClick = { showMenuDialog = true },
+                    onClick = {},
+                )
         )
         RecentApps(
             recents = recents,
             onAppClicked = { viewModel.onAppClicked(it) },
             onAppInfoClicked = { viewModel.onAppInfoClicked(it) },
             onAppUninstallClicked = { viewModel.onAppUninstallClicked(it) },
+        )
+    }
+
+    if (showMenuDialog) {
+        LauncherMenuDialog(
+            onDismissRequest = { showMenuDialog = false },
+            onWallpaperAndStyleClicked = {
+                showMenuDialog = false
+                viewModel.onWallpaperAndStyleClicked()
+            }
         )
     }
 }
@@ -180,13 +199,13 @@ fun App(
     onAppInfoClicked: (AppInfo) -> Unit,
     isTitleVisible: Boolean,
 ) {
-    var appInfoDialogState by remember { mutableStateOf(false) }
+    var showAppInfo by remember { mutableStateOf(false) }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .combinedClickable(
-                onLongClick = { appInfoDialogState = true },
+                onLongClick = { showAppInfo = true },
                 onClick = { onAppClicked(appInfo) },
             )
             .then(modifier)
@@ -202,18 +221,18 @@ fun App(
             AppName(appInfo.name)
         }
     }
-    if (appInfoDialogState) {
+    if (showAppInfo) {
         AppInfoTooltip(
             appInfo,
             onAppInfoClicked = {
-                appInfoDialogState = false
+                showAppInfo = false
                 onAppInfoClicked(appInfo)
             },
             onAppUninstallClicked = {
-                appInfoDialogState = false
+                showAppInfo = false
                 onAppUninstallClicked(appInfo)
             },
-            onDismiss = { appInfoDialogState = false },
+            onDismiss = { showAppInfo = false },
         )
     }
 }
@@ -243,15 +262,33 @@ fun AppInfoTooltip(
     onAppInfoClicked: () -> Unit,
     onAppUninstallClicked: () -> Unit,
     onDismiss: () -> Unit,
+) = LauncherDialog(items = buildList {
+    add("Info" to onAppInfoClicked)
+    if (!appInfo.isSystemApp) {
+        add("Uninstall" to onAppUninstallClicked)
+    }
+}, onDismissRequest = onDismiss)
+
+@Composable
+fun LauncherMenuDialog(
+    onDismissRequest: () -> Unit,
+    onWallpaperAndStyleClicked: () -> Unit,
+) = LauncherDialog(items = buildList {
+    add("Wallpaper & style" to onWallpaperAndStyleClicked)
+}, onDismissRequest = onDismissRequest)
+
+@Composable
+fun LauncherDialog(
+    items: List<Pair<String, () -> Unit>>,
+    onDismissRequest: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(onDismissRequest = onDismissRequest) {
         Card(
             shape = RoundedCornerShape(16.dp),
         ) {
-            Column {
-                AppInfoDialogButton(text = "App info", onClick = onAppInfoClicked)
-                if (!appInfo.isSystemApp) {
-                    AppInfoDialogButton(text = "Uninstall", onClick = onAppUninstallClicked)
+            LazyColumn {
+                items(items) { (text, onClick) ->
+                    AppInfoDialogButton(text = text, onClick = onClick)
                 }
             }
         }

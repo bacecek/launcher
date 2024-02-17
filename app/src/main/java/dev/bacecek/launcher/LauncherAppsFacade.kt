@@ -12,7 +12,6 @@ import android.os.UserHandle
 import android.os.UserManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
 
 data class AppInfo(
     val name: String,
@@ -29,7 +28,7 @@ interface LauncherAppsFacade {
     fun launchApp(appInfo: AppInfo)
     fun uninstall(appInfo: AppInfo)
     fun openAppInfo(appInfo: AppInfo)
-    fun loadInstalledApps(): List<AppInfo>
+    fun openWallpaperPicker()
 }
 
 internal class LauncherAppsFacadeImpl(
@@ -92,8 +91,10 @@ internal class LauncherAppsFacadeImpl(
     override val apps: Flow<List<AppInfo>> = _apps
 
     private fun loadAppList(): List<AppInfo> {
-        return loadInstalledApps()
+        return userManager.userProfiles
             .asSequence()
+            .flatMap { launcherApps.getActivityList(null, it) }
+            .map { it.toAppInfo(context)}
             .filter { it.packageName != BuildConfig.APPLICATION_ID }
             .filter { !FILTERED_COMPONENTS.contains(it.component) }
             .toList()
@@ -124,12 +125,10 @@ internal class LauncherAppsFacadeImpl(
         launcherApps.startAppDetailsActivity(appInfo.component, appInfo.user, null, null)
     }
 
-    override fun loadInstalledApps(): List<AppInfo> {
-        return userManager.userProfiles
-            .asSequence()
-            .flatMap { launcherApps.getActivityList(null, it) }
-            .map { it.toAppInfo(context)}
-            .toList()
+    override fun openWallpaperPicker() {
+        val intent = Intent(Intent.ACTION_SET_WALLPAPER)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     private fun LauncherActivityInfo.toAppInfo(context: Context) = AppInfo(

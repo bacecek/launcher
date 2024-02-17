@@ -56,4 +56,8 @@ class AppListViewModel(
         launcherAppsFacade.uninstall(appInfo)
     }
 
+    fun onWallpaperAndStyleClicked() {
+        launcherAppsFacade.openWallpaperPicker()
+    }
+
 }
