@@ -1,15 +1,11 @@
 package dev.bacecek.launcher
 
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,12 +43,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
-    private val viewModel by viewModels<MainViewModel>(
-        factoryProducer = { MainViewModelFactory(this.applicationContext) }
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -67,7 +60,7 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .padding(start = 24.dp, end = 24.dp, top = 32.dp),
                     ) {
-                        AppListScreen(viewModel)
+                        AppListScreen()
                     }
                 }
             }
@@ -79,9 +72,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppListScreen(
-    viewModel: MainViewModel,
-) {
+fun AppListScreen() {
+    val viewModel = koinViewModel<AppListViewModel>()
     val appList = viewModel.apps.collectAsState()
     val gridSize = viewModel.gridSize.collectAsState()
     val recents = viewModel.recents.collectAsState(initial = emptyList())

@@ -70,5 +70,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+
     testImplementation(libs.junit)
+    testImplementation(libs.koin.junit4)
 }

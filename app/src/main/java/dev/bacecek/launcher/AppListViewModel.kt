@@ -9,8 +9,9 @@ import android.net.Uri
 import android.os.UserManager
 import androidx.core.content.getSystemService
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dev.bacecek.launcher.recent.RecentsDataSource
+import dev.bacecek.launcher.settings.SettingsDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,11 +24,11 @@ import kotlinx.coroutines.launch
 private const val DEFAULT_GRID_SIZE = 4
 
 @Suppress("StaticFieldLeak")
-class MainViewModel(
+class AppListViewModel(
     private val context: Context,
+    private val recentsDataSource: RecentsDataSource,
+    settingsDataSource: SettingsDataStore,
 ) : ViewModel() {
-    private val recentsDataSource = RecentUsedDataSource(context)
-    private val settingsDataSource = SettingsDataStore(context)
 
     val gridSize: StateFlow<Int> = settingsDataSource.gridSize.map {
         it ?: DEFAULT_GRID_SIZE
@@ -51,7 +52,7 @@ class MainViewModel(
     fun onAppClicked(appInfo: AppInfo) {
         launchApp(appInfo)
         viewModelScope.launch {
-            recentsDataSource.onAppUsed(appInfo)
+            recentsDataSource.onAppUsed(appInfo.packageName)
         }
     }
 
@@ -137,13 +138,4 @@ class MainViewModel(
         ).map { ComponentName.unflattenFromString(it) }.toSet()
     }
 
-}
-
-@Suppress("UNCHECKED_CAST")
-class MainViewModelFactory(
-    private val context: Context,
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel(context.applicationContext) as T
-    }
 }

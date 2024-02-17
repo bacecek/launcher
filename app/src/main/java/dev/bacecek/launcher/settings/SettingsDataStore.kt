@@ -1,4 +1,4 @@
-package dev.bacecek.launcher
+package dev.bacecek.launcher.settings
 
 import android.content.Context
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -9,8 +9,14 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore by preferencesDataStore(name = "settings")
 private val GRID_SIZE_KEY = intPreferencesKey("gridSize")
 
-class SettingsDataStore(context: Context) {
+interface SettingsDataStore {
+    val gridSize: Flow<Int?>
+}
 
-    val gridSize: Flow<Int?> = context.dataStore.data.map { it[GRID_SIZE_KEY] }
+internal class SettingsDataStoreImpl(
+    context: Context,
+) : SettingsDataStore {
+
+    override val gridSize: Flow<Int?> = context.dataStore.data.map { it[GRID_SIZE_KEY] }
 
 }

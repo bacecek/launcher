@@ -6,6 +6,8 @@ accompanist = "0.35.0-alpha"
 androidx-compose-compiler = "1.5.11-dev-k2.0.0-Beta4-21f5e479a96"
 androidx-lifecycle = "2.7.0"
 
+koin = "3.5.3"
+
 [libraries]
 accompanist-drawable = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
@@ -27,6 +29,10 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 
 junit = { group = "junit", name = "junit", version = "4.13.2" }
+
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
