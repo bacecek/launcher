@@ -1,5 +1,6 @@
 package dev.bacecek.launcher.recent
 
+import android.content.ComponentName
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -11,30 +12,32 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "recent")
 
-typealias RecentPackageName = String
 typealias LastUsedTimestamp = Long
 
 interface RecentsDataSource {
-    val recentUsedApps: Flow<Map<RecentPackageName, LastUsedTimestamp>>
+    val recentUsedApps: Flow<Map<ComponentName, LastUsedTimestamp>>
 
-    suspend fun onAppUsed(packageName: RecentPackageName)
+    suspend fun onAppUsed(componentName: ComponentName)
 }
 
 internal class RecentsDataSourceImpl(
     private val context: Context
 ) : RecentsDataSource {
 
-    override val recentUsedApps: Flow<Map<RecentPackageName, LastUsedTimestamp>> = context.dataStore
+    override val recentUsedApps: Flow<Map<ComponentName, LastUsedTimestamp>> = context.dataStore
         .data
         .map { preferences ->
             preferences.asMap()
-                .mapKeys { it.key.name }
-                .mapValues { it.value as LastUsedTimestamp }
+                .mapNotNull {
+                    val componentName = ComponentName.unflattenFromString(it.key.name) ?: return@mapNotNull null
+                    componentName to it.value as LastUsedTimestamp
+                }
+                .toMap()
         }
 
-    override suspend fun onAppUsed(packageName: RecentPackageName) {
+    override suspend fun onAppUsed(componentName: ComponentName) {
         context.dataStore.edit { preferences ->
-            val key = longPreferencesKey(packageName)
+            val key = longPreferencesKey(componentName.flattenToString())
             preferences[key] = System.currentTimeMillis()
         }
     }

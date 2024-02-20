@@ -33,7 +33,7 @@ class AppListViewModel(
         apps,
         gridSize
     ) { recents, apps, gridSize ->
-        apps.asSequence().map { it to recents[it.packageName] }
+        apps.asSequence().map { it to recents[it.component] }
             .filter { it.second != null }
             .sortedByDescending { it.second!! }
             .map { it.first }
@@ -44,7 +44,7 @@ class AppListViewModel(
     fun onAppClicked(appInfo: AppInfo) {
         launcherAppsFacade.launchApp(appInfo)
         viewModelScope.launch {
-            recentsDataSource.onAppUsed(appInfo.packageName)
+            recentsDataSource.onAppUsed(appInfo.component)
         }
     }
 
