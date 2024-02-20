@@ -182,14 +182,16 @@ fun RecentApps(
             recents.value,
             key = { it.component },
         ) {
-            App(
-                modifier = Modifier.fillParentMaxWidth(1f / gridSize.value),
-                appInfo = it,
-                onAppClicked = onAppClicked,
-                onAppInfoClicked = onAppInfoClicked,
-                onAppUninstallClicked = onAppUninstallClicked,
-                isTitleVisible = false,
-            )
+            Box(contentAlignment = Alignment.Center) {
+                App(
+                    modifier = Modifier.fillParentMaxWidth(1f / gridSize.value),
+                    appInfo = it,
+                    onAppClicked = onAppClicked,
+                    onAppInfoClicked = onAppInfoClicked,
+                    onAppUninstallClicked = onAppUninstallClicked,
+                    isTitleVisible = false,
+                )
+            }
         }
     }
 }
