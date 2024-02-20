@@ -18,10 +18,11 @@ interface RecentsDataSource {
     val recentUsedApps: Flow<Map<ComponentName, LastUsedTimestamp>>
 
     suspend fun onAppUsed(componentName: ComponentName)
+    suspend fun onAppRemoved(componentName: ComponentName)
 }
 
 internal class RecentsDataSourceImpl(
-    private val context: Context
+    private val context: Context,
 ) : RecentsDataSource {
 
     override val recentUsedApps: Flow<Map<ComponentName, LastUsedTimestamp>> = context.dataStore
@@ -39,6 +40,12 @@ internal class RecentsDataSourceImpl(
         context.dataStore.edit { preferences ->
             val key = longPreferencesKey(componentName.flattenToString())
             preferences[key] = System.currentTimeMillis()
+        }
+    }
+
+    override suspend fun onAppRemoved(componentName: ComponentName) {
+        context.dataStore.edit { preferences ->
+            preferences.remove(longPreferencesKey(componentName.flattenToString()))
         }
     }
 

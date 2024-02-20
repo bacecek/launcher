@@ -2,6 +2,7 @@ package dev.bacecek.launcher
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.bacecek.launcher.di.CoroutineDispatchers
 import dev.bacecek.launcher.recent.RecentsDataSource
 import dev.bacecek.launcher.settings.SettingsDataStore
 import kotlinx.coroutines.flow.Flow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -18,7 +20,16 @@ class AppListViewModel(
     private val launcherAppsFacade: LauncherAppsFacade,
     private val recentsDataSource: RecentsDataSource,
     settingsDataSource: SettingsDataStore,
+    private val dispatchers: CoroutineDispatchers,
 ) : ViewModel() {
+
+    init {
+        viewModelScope.launch(dispatchers.io) {
+            launcherAppsFacade.onAppRemoved.receiveAsFlow().collect {
+                recentsDataSource.onAppRemoved(it.component)
+            }
+        }
+    }
 
     val gridSize: StateFlow<Int> = settingsDataSource.gridSize.map {
         it ?: DEFAULT_GRID_SIZE
@@ -43,7 +54,7 @@ class AppListViewModel(
 
     fun onAppClicked(appInfo: AppInfo) {
         launcherAppsFacade.launchApp(appInfo)
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             recentsDataSource.onAppUsed(appInfo.component)
         }
     }

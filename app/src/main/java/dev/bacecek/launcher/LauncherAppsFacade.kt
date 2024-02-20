@@ -10,8 +10,12 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.UserHandle
 import android.os.UserManager
+import dev.bacecek.launcher.di.CoroutineDispatchers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 data class AppInfo(
     val name: String,
@@ -25,6 +29,7 @@ data class AppInfo(
 
 interface LauncherAppsFacade {
     val apps: Flow<List<AppInfo>>
+    val onAppRemoved: Channel<AppInfo>
     fun launchApp(appInfo: AppInfo)
     fun uninstall(appInfo: AppInfo)
     fun openAppInfo(appInfo: AppInfo)
@@ -33,6 +38,8 @@ interface LauncherAppsFacade {
 
 internal class LauncherAppsFacadeImpl(
     private val context: Context,
+    private val dispatchers: CoroutineDispatchers,
+    private val coroutineScope: CoroutineScope,
 ) : LauncherAppsFacade {
     private val userManager: UserManager
         get() = context.requireSystemService()
@@ -42,7 +49,11 @@ internal class LauncherAppsFacadeImpl(
     init {
         launcherApps.registerCallback(object : LauncherApps.Callback() {
             override fun onPackageRemoved(packageName: String, user: UserHandle) {
-                _apps.value = _apps.value.filter { it.packageName != packageName }
+                val toRemove = _apps.value.filter { it.packageName == packageName}
+                _apps.value = _apps.value.minus(toRemove.toSet())
+                coroutineScope.launch(dispatchers.io) {
+                    toRemove.forEach { onAppRemoved.send(it) }
+                }
             }
 
             override fun onPackageAdded(packageName: String, user: UserHandle) {
@@ -89,6 +100,8 @@ internal class LauncherAppsFacadeImpl(
 
     private val _apps = MutableStateFlow(loadAppList())
     override val apps: Flow<List<AppInfo>> = _apps
+
+    override val onAppRemoved: Channel<AppInfo> = Channel(Channel.RENDEZVOUS)
 
     private fun loadAppList(): List<AppInfo> {
         return userManager.userProfiles
