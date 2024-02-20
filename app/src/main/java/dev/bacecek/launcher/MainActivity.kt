@@ -159,7 +159,6 @@ fun AppsGrid(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecentApps(
     recents: State<List<AppInfo>>,
@@ -179,9 +178,7 @@ fun RecentApps(
             key = { it.component },
         ) {
             App(
-                modifier = Modifier
-                    .animateItemPlacement()
-                    .fillParentMaxWidth(1f / recents.value.size),
+                modifier = Modifier.fillParentMaxWidth(1f / recents.value.size),
                 appInfo = it,
                 onAppClicked = onAppClicked,
                 onAppInfoClicked = onAppInfoClicked,
