@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -89,7 +91,9 @@ fun AppListScreen() {
 
     var showMenuDialog by remember { mutableStateOf(false) }
 
-    Column {
+    Column(
+        modifier = Modifier.padding(start = 24.dp, end = 24.dp),
+    ) {
         AppsGrid(
             apps = appList,
             gridSize = gridSize,
@@ -104,10 +108,10 @@ fun AppListScreen() {
                     onLongClick = { showMenuDialog = true },
                     onClick = {},
                 )
-                .padding(start = 24.dp, end = 24.dp, top = 32.dp)
         )
         RecentApps(
             recents = recents,
+            gridSize = gridSize,
             onAppClicked = { viewModel.onAppClicked(it) },
             onAppInfoClicked = { viewModel.onAppInfoClicked(it) },
             onAppUninstallClicked = { viewModel.onAppUninstallClicked(it) },
@@ -162,6 +166,7 @@ fun AppsGrid(
 @Composable
 fun RecentApps(
     recents: State<List<AppInfo>>,
+    gridSize: State<Int>,
     onAppClicked: (AppInfo) -> Unit,
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
@@ -178,7 +183,7 @@ fun RecentApps(
             key = { it.component },
         ) {
             App(
-                modifier = Modifier.fillParentMaxWidth(1f / recents.value.size),
+                modifier = Modifier.fillParentMaxWidth(1f / gridSize.value),
                 appInfo = it,
                 onAppClicked = onAppClicked,
                 onAppInfoClicked = onAppInfoClicked,
