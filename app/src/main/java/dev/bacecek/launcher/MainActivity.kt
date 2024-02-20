@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -34,7 +33,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -85,9 +83,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppListScreen() {
     val viewModel = koinViewModel<AppListViewModel>()
-    val appList = viewModel.apps.collectAsState()
-    val gridSize = viewModel.gridSize.collectAsState()
-    val recents = viewModel.recents.collectAsState(initial = emptyList())
+    val appList by viewModel.apps.collectAsState()
+    val gridSize by viewModel.gridSize.collectAsState()
+    val recents by viewModel.recents.collectAsState(initial = emptyList())
 
     var showMenuDialog by remember { mutableStateOf(false) }
 
@@ -132,15 +130,15 @@ fun AppListScreen() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppsGrid(
-    apps: State<List<AppInfo>>,
-    gridSize: State<Int>,
+    apps: List<AppInfo>,
+    gridSize: Int,
     modifier: Modifier,
     onAppClicked: (AppInfo) -> Unit,
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(gridSize.value),
+        columns = GridCells.Fixed(gridSize),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = Modifier
@@ -148,7 +146,7 @@ fun AppsGrid(
             .then(modifier)
     ) {
         items(
-            apps.value,
+            apps,
             key = { it.component },
         ) {
             App(
@@ -165,8 +163,8 @@ fun AppsGrid(
 
 @Composable
 fun RecentApps(
-    recents: State<List<AppInfo>>,
-    gridSize: State<Int>,
+    recents: List<AppInfo>,
+    gridSize: Int,
     onAppClicked: (AppInfo) -> Unit,
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
@@ -179,12 +177,12 @@ fun RecentApps(
         userScrollEnabled = false,
     ) {
         items(
-            recents.value,
+            recents,
             key = { it.component },
         ) {
             Box(contentAlignment = Alignment.Center) {
                 App(
-                    modifier = Modifier.fillParentMaxWidth(1f / gridSize.value),
+                    modifier = Modifier.fillParentMaxWidth(1f / gridSize),
                     appInfo = it,
                     onAppClicked = onAppClicked,
                     onAppInfoClicked = onAppInfoClicked,
