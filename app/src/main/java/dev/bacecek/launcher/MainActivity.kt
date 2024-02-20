@@ -90,7 +90,7 @@ fun AppListScreen() {
     var showMenuDialog by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.padding(start = 24.dp, end = 24.dp),
+        modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 32.dp),
     ) {
         AppsGrid(
             apps = appList,
