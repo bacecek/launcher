@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -65,8 +66,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Surface(
                         modifier = Modifier
-                            .padding(innerPadding)
-                            .padding(start = 24.dp, end = 24.dp, top = 32.dp),
+                            .padding(innerPadding),
                     ) {
                         AppListScreen()
                     }
@@ -99,9 +99,12 @@ fun AppListScreen() {
             modifier = Modifier
                 .weight(1f)
                 .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
                     onLongClick = { showMenuDialog = true },
                     onClick = {},
                 )
+                .padding(start = 24.dp, end = 24.dp, top = 32.dp)
         )
         RecentApps(
             recents = recents,
