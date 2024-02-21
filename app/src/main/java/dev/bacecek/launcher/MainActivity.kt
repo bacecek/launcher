@@ -236,6 +236,8 @@ fun App(
             .combinedClickable(
                 onLongClick = { showAppInfo = true },
                 onClick = { onAppClicked(appInfo) },
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
             )
             .then(modifier)
     ) {
