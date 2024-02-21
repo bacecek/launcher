@@ -3,6 +3,7 @@ package dev.bacecek.launcher
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
             window.isNavigationBarContrastEnforced = false
         }
         setContent {
+            BackHandler {}
             ApplicationTheme {
                 Scaffold(
                     containerColor = Color.Transparent,
@@ -78,9 +80,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    @Suppress("OVERRIDE_DEPRECATION", "MissingSuperCall")
-    override fun onBackPressed() = Unit
 }
 
 @OptIn(ExperimentalFoundationApi::class)
