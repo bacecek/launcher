@@ -14,12 +14,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-private const val DEFAULT_GRID_SIZE = 4
-
 class AppListViewModel(
     private val launcherAppsFacade: LauncherAppsFacade,
     private val recentsDataSource: RecentsDataSource,
-    settingsDataSource: SettingsDataStore,
+    private val settingsDataSource: SettingsDataStore,
     private val dispatchers: CoroutineDispatchers,
 ) : ViewModel() {
 
@@ -31,9 +29,8 @@ class AppListViewModel(
         }
     }
 
-    val gridSize: StateFlow<Int> = settingsDataSource.gridSize.map {
-        it ?: DEFAULT_GRID_SIZE
-    }.stateIn(viewModelScope, SharingStarted.Lazily, DEFAULT_GRID_SIZE)
+    val gridSize: StateFlow<Int>
+        get() = settingsDataSource.gridSize
 
     val apps: StateFlow<List<AppInfo>> = launcherAppsFacade.apps.map {
         it.sortedBy { it.name }

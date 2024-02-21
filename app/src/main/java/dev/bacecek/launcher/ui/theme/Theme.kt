@@ -21,13 +21,13 @@ private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-).transparent()
+)
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-).transparent()
+)
 
 @Composable
 fun ApplicationTheme(
@@ -39,11 +39,7 @@ fun ApplicationTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) {
-                dynamicDarkColorScheme(context).transparent()
-            } else {
-                dynamicLightColorScheme(context).transparent()
-            }
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
         darkTheme -> DarkColorScheme
@@ -60,8 +56,3 @@ fun ApplicationTheme(
         )
     }
 }
-
-fun ColorScheme.transparent() = copy(
-    background = Color.Transparent,
-    surface = Color.Transparent,
-)

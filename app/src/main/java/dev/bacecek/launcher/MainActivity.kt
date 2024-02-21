@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import dev.bacecek.launcher.settings.SettingsDialog
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -67,9 +68,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             ApplicationTheme {
                 Scaffold(
+                    containerColor = Color.Transparent,
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
-                    Surface {
+                    Surface(color = Color.Transparent) {
                         AppListScreen(innerPadding)
                     }
                 }
@@ -93,6 +95,7 @@ fun AppListScreen(
     val showRecents by remember { derivedStateOf { recents.isNotEmpty() } }
 
     var showMenuDialog by remember { mutableStateOf(false) }
+    var showSettingsDialog by remember { mutableStateOf(false) }
 
     val layoutDirection = LocalLayoutDirection.current
 
@@ -142,7 +145,17 @@ fun AppListScreen(
             onWallpaperAndStyleClicked = {
                 showMenuDialog = false
                 viewModel.onWallpaperAndStyleClicked()
+            },
+            onSettingsClicked = {
+                showMenuDialog = false
+                showSettingsDialog = true
             }
+        )
+    }
+
+    if (showSettingsDialog) {
+        SettingsDialog(
+            onDismissRequest = { showSettingsDialog = false },
         )
     }
 }
@@ -304,8 +317,10 @@ fun AppInfoTooltip(
 fun LauncherMenuDialog(
     onDismissRequest: () -> Unit,
     onWallpaperAndStyleClicked: () -> Unit,
+    onSettingsClicked: () -> Unit,
 ) = LauncherDialog(items = buildList {
     add("Wallpaper & style" to onWallpaperAndStyleClicked)
+    add("Settings" to onSettingsClicked)
 }, onDismissRequest = onDismissRequest)
 
 @Composable
