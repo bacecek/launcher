@@ -36,7 +36,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import dev.bacecek.launcher.settings.SettingsDialog
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
@@ -89,9 +89,9 @@ fun AppListScreen(
     innerPadding: PaddingValues,
 ) {
     val viewModel = koinViewModel<AppListViewModel>()
-    val appList by viewModel.apps.collectAsState()
-    val gridSize by viewModel.gridSize.collectAsState()
-    val recents by viewModel.recents.collectAsState(initial = emptyList())
+    val appList by viewModel.apps.collectAsStateWithLifecycle()
+    val gridSize by viewModel.gridSize.collectAsStateWithLifecycle()
+    val recents by viewModel.recents.collectAsStateWithLifecycle()
     val showRecents by remember { derivedStateOf { recents.isNotEmpty() } }
 
     var showMenuDialog by remember { mutableStateOf(false) }

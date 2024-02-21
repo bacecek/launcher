@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dev.bacecek.launcher.di.CoroutineDispatchers
 import dev.bacecek.launcher.recent.RecentsDataSource
 import dev.bacecek.launcher.settings.SettingsDataStore
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -34,9 +33,9 @@ class AppListViewModel(
 
     val apps: StateFlow<List<AppInfo>> = launcherAppsFacade.apps.map {
         it.sortedBy { it.name }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    val recents: Flow<List<AppInfo>> = combine(
+    val recents: StateFlow<List<AppInfo>> = combine(
         recentsDataSource.recentUsedApps,
         apps,
         gridSize
@@ -47,7 +46,7 @@ class AppListViewModel(
             .map { it.first }
             .take(gridSize)
             .toList()
-    }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     fun onAppClicked(appInfo: AppInfo) {
         launcherAppsFacade.launchApp(appInfo)
