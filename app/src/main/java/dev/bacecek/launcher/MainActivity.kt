@@ -27,10 +27,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -56,6 +56,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import dev.bacecek.launcher.settings.SettingsDialog
+import dev.bacecek.launcher.ui.fadingEdges
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -108,7 +109,7 @@ fun AppListScreen(
             top = innerPadding.calculateTopPadding() + 32.dp,
             start = innerPadding.calculateStartPadding(layoutDirection),
             end = innerPadding.calculateEndPadding(layoutDirection),
-            bottom = if (showRecents) 0.dp else innerPadding.calculateBottomPadding() + 32.dp
+            bottom = if (showRecents) 16.dp else innerPadding.calculateBottomPadding() + 32.dp
         )
         AppsGrid(
             contentPadding = contentPadding,
@@ -170,13 +171,20 @@ fun AppsGrid(
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
 ) {
+    val scrollState = rememberLazyGridState()
     LazyVerticalGrid(
         contentPadding = contentPadding,
         columns = GridCells.Fixed(gridSize),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
+        state = scrollState,
         modifier = Modifier
             .fillMaxWidth()
+            .fadingEdges(
+                scrollState = scrollState,
+                topEdgeHeight = contentPadding.calculateTopPadding(),
+                bottomEdgeHeight = contentPadding.calculateBottomPadding(),
+            )
             .then(modifier)
     ) {
         items(
@@ -204,7 +212,6 @@ fun RecentApps(
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
 ) {
-    HorizontalDivider(color = Color(0x25000000))
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
