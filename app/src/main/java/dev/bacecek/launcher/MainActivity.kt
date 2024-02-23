@@ -41,6 +41,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +59,7 @@ import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import dev.bacecek.launcher.settings.SettingsDialog
 import dev.bacecek.launcher.ui.fadingEdges
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -172,6 +174,10 @@ fun AppsGrid(
     onAppInfoClicked: (AppInfo) -> Unit,
 ) {
     val scrollState = rememberLazyGridState()
+    val coroutineScope = rememberCoroutineScope()
+    BackHandler(enabled = scrollState.canScrollBackward) {
+        coroutineScope.launch { scrollState.animateScrollToItem(0) }
+    }
     LazyVerticalGrid(
         contentPadding = contentPadding,
         columns = GridCells.Fixed(gridSize),
