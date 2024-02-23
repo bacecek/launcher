@@ -37,7 +37,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -93,8 +92,7 @@ fun AppListScreen(
     val viewModel = koinViewModel<AppListViewModel>()
     val appList by viewModel.apps.collectAsStateWithLifecycle()
     val gridSize by viewModel.gridSize.collectAsStateWithLifecycle()
-    val recents by viewModel.recents.collectAsStateWithLifecycle()
-    val showRecents by remember { derivedStateOf { recents.isNotEmpty() } }
+    val showRecents by viewModel.showRecents.collectAsStateWithLifecycle()
 
     var showMenuDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
@@ -130,6 +128,7 @@ fun AppListScreen(
                 )
         )
         if (showRecents) {
+            val recents by viewModel.recents.collectAsStateWithLifecycle()
             RecentApps(
                 modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
                 recents = recents,

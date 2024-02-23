@@ -16,9 +16,18 @@ class SettingsViewModel(
 
     val availableGridSizes: List<Int> = listOf(3, 4, 5, 6)
 
+    val isRecentsEnabled: StateFlow<Boolean>
+        get() = settingsDataStore.isRecentsEnabled
+
     fun setGridSize(size: Int) {
         viewModelScope.launch(coroutineDispatchers.io) {
             settingsDataStore.setGridSize(size)
+        }
+    }
+
+    fun setRecentsEnabled(enabled: Boolean) {
+        viewModelScope.launch(coroutineDispatchers.io) {
+            settingsDataStore.setRecentsEnabled(enabled)
         }
     }
 

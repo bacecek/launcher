@@ -48,6 +48,13 @@ class AppListViewModel(
             .toList()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
+    val showRecents: StateFlow<Boolean> = combine(
+        settingsDataSource.isRecentsEnabled,
+        recents,
+    ) { isRecentsEnabled, recents ->
+        isRecentsEnabled && recents.isNotEmpty()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     fun onAppClicked(appInfo: AppInfo) {
         launcherAppsFacade.launchApp(appInfo)
         viewModelScope.launch(dispatchers.io) {

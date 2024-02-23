@@ -32,6 +32,7 @@ fun SettingsDialog(
     val viewModel = koinViewModel<SettingsViewModel>()
     val gridSize by viewModel.gridSize.collectAsStateWithLifecycle()
     val availableGridSizes = viewModel.availableGridSizes
+    val isRecentsEnabled by viewModel.isRecentsEnabled.collectAsStateWithLifecycle()
     AlertDialog(
         containerColor = MaterialTheme.colorScheme.surface,
         onDismissRequest = onDismissRequest,
@@ -60,6 +61,19 @@ fun SettingsDialog(
                             onClick = { viewModel.setGridSize(size) },
                         )
                     }
+                }
+                SettingsDialogSectionTitle("Show recent used apps")
+                Column(Modifier.selectableGroup()) {
+                    SettingsDialogThemeChooserRow(
+                        text = "Enabled",
+                        selected = isRecentsEnabled,
+                        onClick = { viewModel.setRecentsEnabled(true) },
+                    )
+                    SettingsDialogThemeChooserRow(
+                        text = "Disabled",
+                        selected = !isRecentsEnabled,
+                        onClick = { viewModel.setRecentsEnabled(false) },
+                    )
                 }
             }
         },
