@@ -56,6 +56,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import dev.bacecek.launcher.settings.SettingsDialog
+import dev.bacecek.launcher.ui.BounceEdgeEffect
 import dev.bacecek.launcher.ui.fadingEdges
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.launch
@@ -173,7 +174,7 @@ fun AppsGrid(
     onAppClicked: (AppInfo) -> Unit,
     onAppUninstallClicked: (AppInfo) -> Unit,
     onAppInfoClicked: (AppInfo) -> Unit,
-) {
+) = BounceEdgeEffect {
     val scrollState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()
     BackHandler(enabled = scrollState.canScrollBackward) {
