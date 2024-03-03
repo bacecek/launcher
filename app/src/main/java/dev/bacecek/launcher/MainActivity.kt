@@ -129,14 +129,16 @@ fun AppListScreen(
         )
         if (showRecents) {
             val recents by viewModel.recents.collectAsStateWithLifecycle()
-            RecentApps(
-                modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
-                recents = recents,
-                gridSize = gridSize,
-                onAppClicked = { viewModel.onAppClicked(it) },
-                onAppInfoClicked = { viewModel.onAppInfoClicked(it) },
-                onAppUninstallClicked = { viewModel.onAppUninstallClicked(it) },
-            )
+            if (recents.isNotEmpty()) {
+                RecentApps(
+                    modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
+                    recents = recents,
+                    gridSize = gridSize,
+                    onAppClicked = { viewModel.onAppClicked(it) },
+                    onAppInfoClicked = { viewModel.onAppInfoClicked(it) },
+                    onAppUninstallClicked = { viewModel.onAppUninstallClicked(it) },
+                )
+            }
         }
     }
 

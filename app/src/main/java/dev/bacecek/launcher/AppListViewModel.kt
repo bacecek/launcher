@@ -40,6 +40,7 @@ class AppListViewModel(
         apps,
         gridSize
     ) { recents, apps, gridSize ->
+        println("recents")
         apps.asSequence().map { it to recents[it.component] }
             .filter { it.second != null }
             .sortedByDescending { it.second!! }
@@ -48,12 +49,7 @@ class AppListViewModel(
             .toList()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    val showRecents: StateFlow<Boolean> = combine(
-        settingsDataSource.isRecentsEnabled,
-        recents,
-    ) { isRecentsEnabled, recents ->
-        isRecentsEnabled && recents.isNotEmpty()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+    val showRecents: StateFlow<Boolean> = settingsDataSource.isRecentsEnabled
 
     fun onAppClicked(appInfo: AppInfo) {
         launcherAppsFacade.launchApp(appInfo)
