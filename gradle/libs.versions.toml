@@ -1,5 +1,5 @@
 [versions]
-agp = "8.4.0-alpha12"
+agp = "8.4.0-alpha13"
 kotlin = "2.0.0-Beta4"
 
 accompanist = "0.35.0-alpha"
