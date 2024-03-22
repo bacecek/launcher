@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0-alpha01"
+agp = "8.5.0-alpha02"
 kotlin = "2.0.0-Beta4"
 
 accompanist = "0.35.0-alpha"
@@ -12,7 +12,7 @@ koin = "3.5.3"
 accompanist-drawable = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.8.2" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2024.02.02" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2024.03.00" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
