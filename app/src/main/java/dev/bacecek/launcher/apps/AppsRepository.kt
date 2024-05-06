@@ -5,11 +5,13 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
+import android.icu.text.Collator
 import android.os.UserManager
 import dev.bacecek.launcher.BuildConfig
 import dev.bacecek.launcher.di.CoroutineDispatchers
 import dev.bacecek.launcher.utils.GlobalLocaleChangeDispatcher
 import dev.bacecek.launcher.utils.requireSystemService
+import dev.bacecek.launcher.utils.sortedWithCollatorBy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +27,7 @@ internal class AppsRepositoryImpl(
     private val dispatchers: CoroutineDispatchers,
     private val coroutineScope: CoroutineScope,
     private val appsEventsDispatcher: AppEventsDispatcher,
-    configurationChangeDispatcher: GlobalLocaleChangeDispatcher,
+    private val localeChangeDispatcher: GlobalLocaleChangeDispatcher,
 ) : AppsRepository {
     private val userManager: UserManager by lazy { context.requireSystemService() }
     private val launcherApps: LauncherApps by lazy { context.requireSystemService() }
@@ -40,7 +42,7 @@ internal class AppsRepositoryImpl(
         }
 
         coroutineScope.launch(dispatchers.main) {
-            configurationChangeDispatcher.flow.collect {
+            localeChangeDispatcher.flow.collect {
                 update()
             }
         }
@@ -64,7 +66,7 @@ internal class AppsRepositoryImpl(
             .map { it.toAppInfo(context) }
             .filter { it.packageName != BuildConfig.APPLICATION_ID }
             .filter { !FILTERED_COMPONENTS.contains(it.component) }
-            .sortedBy { it.name }
+            .sortedWithCollatorBy(Collator.getInstance(localeChangeDispatcher.flow.value)) { it.name }
             .toList()
     }
 
