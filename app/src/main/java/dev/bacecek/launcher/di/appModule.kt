@@ -12,16 +12,18 @@ import dev.bacecek.launcher.settings.SettingsPresenter
 import dev.bacecek.launcher.settings.SettingsRepository
 import dev.bacecek.launcher.settings.SettingsRepositoryImpl
 import dev.bacecek.launcher.settings.SettingsScreen
+import dev.bacecek.launcher.utils.GlobalLocaleChangeDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.koin.dsl.module
 
 val appModule = module {
-    single<AppsRepository> { AppsRepositoryImpl(get(), get(), get(), get()) }
+    single<AppsRepository> { AppsRepositoryImpl(get(), get(), get(), get(), get()) }
     single<RecentsRepository> { RecentsRepositoryImpl(get(), get(), get(), get()) }
     single<SettingsRepository> { SettingsRepositoryImpl(get(), get()) }
     single<AppEventsDispatcher> { AppEventsDispatcher(get()) }
+    single<GlobalLocaleChangeDispatcher> { GlobalLocaleChangeDispatcher() }
 
     single<CoroutineDispatchers> { RealDispatchers() }
     single<CoroutineScope> { CoroutineScope(SupervisorJob() + Dispatchers.Default) }

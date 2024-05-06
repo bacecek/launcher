@@ -8,6 +8,7 @@ import android.content.pm.LauncherApps
 import android.os.UserManager
 import dev.bacecek.launcher.BuildConfig
 import dev.bacecek.launcher.di.CoroutineDispatchers
+import dev.bacecek.launcher.utils.GlobalLocaleChangeDispatcher
 import dev.bacecek.launcher.utils.requireSystemService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,7 @@ internal class AppsRepositoryImpl(
     private val dispatchers: CoroutineDispatchers,
     private val coroutineScope: CoroutineScope,
     private val appsEventsDispatcher: AppEventsDispatcher,
+    configurationChangeDispatcher: GlobalLocaleChangeDispatcher,
 ) : AppsRepository {
     private val userManager: UserManager by lazy { context.requireSystemService() }
     private val launcherApps: LauncherApps by lazy { context.requireSystemService() }
@@ -33,6 +35,12 @@ internal class AppsRepositoryImpl(
 
         coroutineScope.launch(dispatchers.main) {
             appsEventsDispatcher.eventsFlow().collect {
+                update()
+            }
+        }
+
+        coroutineScope.launch(dispatchers.main) {
+            configurationChangeDispatcher.flow.collect {
                 update()
             }
         }
