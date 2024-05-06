@@ -1,5 +1,7 @@
 package dev.bacecek.launcher.apps
 
+import android.content.ComponentName
+import android.os.UserHandle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -21,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
@@ -65,8 +68,8 @@ private fun AppName(name: String) {
     Text(
         text = name,
         textAlign = TextAlign.Center,
-        minLines = 2,
-        maxLines = 2,
+        minLines = 1,
+        maxLines = 1,
         lineHeight = 14.sp,
         fontSize = 12.sp,
         color = Color.White,
@@ -76,5 +79,24 @@ private fun AppName(name: String) {
                 blurRadius = 5f,
             )
         )
+    )
+}
+
+@Preview
+@Composable
+private fun AppIconPreview() {
+    AppIcon(
+        appInfo = AppInfo(
+            name = "App Name",
+            icon = null,
+            packageName = "com.example.app",
+            component = ComponentName("com.example.app", "com.example.app.MainActivity"),
+            activityClassName = null,
+            user = UserHandle.getUserHandleForUid(0),
+            isSystemApp = false,
+        ),
+        onAppClicked = {},
+        onAppLongClicked = {},
+        isTitleVisible = true,
     )
 }

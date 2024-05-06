@@ -33,12 +33,14 @@ data object SettingsScreen : Screen {
         val gridSize: Int,
         val availableGridSizes: List<Int>,
         val isRecentsEnabled: Boolean,
+        val showTitle: Boolean,
         val eventSink: (Event) -> Unit,
     ) : CircuitUiState
 
     sealed interface Event {
         data class GridSizeChosen(val newSize: Int) : Event
         data class RecentsEnabledChanged(val enabled: Boolean) : Event
+        data class ShowTitleChanged(val enabled: Boolean) : Event
         data object BackClicked : Event
     }
 }
@@ -84,6 +86,11 @@ fun SettingsScreen(
                     onValueChange = { state.eventSink(SettingsScreen.Event.RecentsEnabledChanged(it)) },
                     title = { Text(text = "Show recent used apps") },
                 )
+                SwitchPreference(
+                    value = state.showTitle,
+                    onValueChange = { state.eventSink(SettingsScreen.Event.ShowTitleChanged(it)) },
+                    title = { Text(text = "Show app label") },
+                )
             }
         }
     }
@@ -97,6 +104,7 @@ fun PreviewSettingsScreen() {
             gridSize = 4,
             availableGridSizes = listOf(3, 4, 5, 6),
             isRecentsEnabled = true,
+            showTitle = true,
             eventSink = {},
         ),
     )

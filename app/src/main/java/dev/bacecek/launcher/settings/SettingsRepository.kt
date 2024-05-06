@@ -19,12 +19,17 @@ private const val DEFAULT_GRID_SIZE = 4
 private val ENABLED_RECENTS_KEY = booleanPreferencesKey("enabledRecents")
 private const val DEFAULT_ENABLED_RECENTS = true
 
+private val SHOW_TITLE_KEY = booleanPreferencesKey("showTitle")
+private const val DEFAULT_SHOW_TITLE = true
+
 interface SettingsRepository {
     val gridSize: StateFlow<Int>
     val isRecentsEnabled: StateFlow<Boolean>
+    val showTitle: StateFlow<Boolean>
 
     suspend fun setGridSize(size: Int)
     suspend fun setRecentsEnabled(enabled: Boolean)
+    suspend fun setShowTitle(enabled: Boolean)
 }
 
 internal class SettingsRepositoryImpl(
@@ -41,6 +46,10 @@ internal class SettingsRepositoryImpl(
         it[ENABLED_RECENTS_KEY] ?: DEFAULT_ENABLED_RECENTS
     }.stateIn(coroutineScope, started = SharingStarted.Eagerly, initialValue = DEFAULT_ENABLED_RECENTS)
 
+    override val showTitle: StateFlow<Boolean> = dataStore.data.map {
+        it[SHOW_TITLE_KEY] ?: DEFAULT_SHOW_TITLE
+    }.stateIn(coroutineScope, started = SharingStarted.Eagerly, initialValue = DEFAULT_SHOW_TITLE)
+
     override suspend fun setGridSize(size: Int) {
         dataStore.edit { settings ->
             settings[GRID_SIZE_KEY] = size
@@ -50,6 +59,12 @@ internal class SettingsRepositoryImpl(
     override suspend fun setRecentsEnabled(enabled: Boolean) {
         dataStore.edit { settings ->
             settings[ENABLED_RECENTS_KEY] = enabled
+        }
+    }
+
+    override suspend fun setShowTitle(enabled: Boolean) {
+        dataStore.edit { settings ->
+            settings[SHOW_TITLE_KEY] = enabled
         }
     }
 }

@@ -27,6 +27,7 @@ data object AppsScreen : Screen {
         val apps: List<AppInfo>,
         val recents: List<AppInfo>,
         val gridSize: Int,
+        val showTitle: Boolean,
         val eventSink: (Event) -> Unit,
         val overlay: Overlay? = null,
     ) : CircuitUiState
@@ -80,6 +81,7 @@ fun AppsScreen(
                 contentPadding = contentPadding,
                 apps = state.apps,
                 gridSize = state.gridSize,
+                isTitleVisible = state.showTitle,
                 onAppClicked = { state.eventSink(AppsScreen.Event.AppClicked(it)) },
                 onAppLongClicked = { state.eventSink(AppsScreen.Event.AppLongClicked(it)) },
                 modifier = Modifier

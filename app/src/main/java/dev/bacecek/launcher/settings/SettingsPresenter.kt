@@ -18,11 +18,13 @@ class SettingsPresenter(
     override fun present(): SettingsScreen.State {
         val gridSize by repository.gridSize.collectAsState()
         val isRecentsEnabled by repository.isRecentsEnabled.collectAsState()
+        val showTitle by repository.showTitle.collectAsState()
         val scope = rememberStableCoroutineScope()
         return SettingsScreen.State(
             gridSize = gridSize,
             availableGridSizes = listOf(3, 4, 5),
             isRecentsEnabled = isRecentsEnabled,
+            showTitle = showTitle,
             eventSink = { event ->
                 when (event) {
                     is SettingsScreen.Event.GridSizeChosen -> {
@@ -30,6 +32,9 @@ class SettingsPresenter(
                     }
                     is SettingsScreen.Event.RecentsEnabledChanged -> {
                         scope.launch { repository.setRecentsEnabled(event.enabled) }
+                    }
+                    is SettingsScreen.Event.ShowTitleChanged -> {
+                        scope.launch { repository.setShowTitle(event.enabled) }
                     }
                     is SettingsScreen.Event.BackClicked -> navigator.pop()
                 }

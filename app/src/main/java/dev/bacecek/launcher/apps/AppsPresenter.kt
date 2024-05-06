@@ -36,6 +36,7 @@ class AppsPresenter(
     override fun present(): AppsScreen.State {
         val apps by repository.apps.collectAsState(initial = emptyList())
         val gridSize by settingsRepository.gridSize.collectAsState()
+        val showTitle by settingsRepository.showTitle.collectAsState()
         val recents by collectRecents().collectAsState(initial = emptyList())
         val scope = rememberStableCoroutineScope()
         var overlay by rememberRetained { mutableStateOf<Overlay?>(null) }
@@ -43,6 +44,7 @@ class AppsPresenter(
             apps = apps,
             recents = recents,
             gridSize = gridSize,
+            showTitle = showTitle,
             eventSink = { event ->
                 when (event) {
                     is Event.AppClicked -> {

@@ -23,6 +23,7 @@ fun AppsGrid(
     contentPadding: PaddingValues,
     apps: List<AppInfo>,
     gridSize: Int,
+    isTitleVisible: Boolean,
     modifier: Modifier = Modifier,
     onAppClicked: (AppInfo) -> Unit = {},
     onAppLongClicked: (AppInfo) -> Unit = {},
@@ -56,7 +57,7 @@ fun AppsGrid(
                 appInfo = it,
                 onAppClicked = onAppClicked,
                 onAppLongClicked = onAppLongClicked,
-                isTitleVisible = true,
+                isTitleVisible = isTitleVisible,
             )
         }
     }

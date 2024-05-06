@@ -2,7 +2,6 @@ package dev.bacecek.launcher.navigation
 
 import android.content.ComponentName
 import android.content.pm.LauncherApps
-import android.graphics.Rect
 import android.os.Parcelable
 import android.os.UserHandle
 import com.slack.circuitx.android.AndroidScreen
