@@ -19,7 +19,7 @@ private const val DEFAULT_GRID_SIZE = 4
 private val ENABLED_RECENTS_KEY = booleanPreferencesKey("enabledRecents")
 private const val DEFAULT_ENABLED_RECENTS = true
 
-interface SettingsDataStore {
+interface SettingsRepository {
     val gridSize: StateFlow<Int>
     val isRecentsEnabled: StateFlow<Boolean>
 
@@ -27,10 +27,10 @@ interface SettingsDataStore {
     suspend fun setRecentsEnabled(enabled: Boolean)
 }
 
-internal class SettingsDataStoreImpl(
+internal class SettingsRepositoryImpl(
     context: Context,
     coroutineScope: CoroutineScope,
-) : SettingsDataStore {
+) : SettingsRepository {
     private val dataStore = context.dataStore
 
     override val gridSize: StateFlow<Int> = dataStore.data.map {

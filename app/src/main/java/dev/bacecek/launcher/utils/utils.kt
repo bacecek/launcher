@@ -1,4 +1,4 @@
-package dev.bacecek.launcher
+package dev.bacecek.launcher.utils
 
 import android.content.Context
 import androidx.core.content.getSystemService

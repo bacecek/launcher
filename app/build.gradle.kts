@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -69,8 +70,14 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    implementation(libs.circuit.android)
+    implementation(libs.circuit.foundation)
+    implementation(libs.circuit.overlays)
+
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+
+    implementation(libs.preferences.compose)
 
     testImplementation(libs.junit)
     testImplementation(libs.koin.junit4)
