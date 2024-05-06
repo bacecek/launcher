@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
@@ -19,8 +20,8 @@ import dev.bacecek.launcher.navigation.AppIntentScreen
 import dev.bacecek.launcher.navigation.UninstallAppScreen
 import dev.bacecek.launcher.navigation.WallpaperPickerScreen
 import dev.bacecek.launcher.recent.RecentsRepository
+import dev.bacecek.launcher.settings.SettingsIntentScreen
 import dev.bacecek.launcher.settings.SettingsRepository
-import dev.bacecek.launcher.settings.SettingsScreen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -40,6 +41,7 @@ class AppsPresenter(
         val recents by collectRecents().collectAsState(initial = emptyList())
         val scope = rememberStableCoroutineScope()
         var overlay by rememberRetained { mutableStateOf<Overlay?>(null) }
+        val context = LocalContext.current
         return AppsScreen.State(
             apps = apps,
             recents = recents,
@@ -74,7 +76,7 @@ class AppsPresenter(
                     }
                     is Event.SettingsClicked -> {
                         overlay = null
-                        navigator.goTo(SettingsScreen)
+                        navigator.goTo(SettingsIntentScreen(context))
                     }
                     Event.OverlayDismissed -> {
                         overlay = null
