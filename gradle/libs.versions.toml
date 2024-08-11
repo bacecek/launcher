@@ -1,18 +1,18 @@
 [versions]
-agp = "8.5.0-alpha08"
-kotlin = "2.0.0-RC2"
+agp = "8.7.0-alpha03"
+kotlin = "2.0.20-RC"
 
 accompanist = "0.35.0-alpha"
-androidx-lifecycle = "2.7.0"
+androidx-lifecycle = "2.8.4"
 
-circuit = "0.20.0"
-koin = "3.5.3"
+circuit = "0.23.0"
+koin = "4.0.0-RC1"
 
 [libraries]
 accompanist-drawable = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
 
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.9.0" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2024.05.00" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.9.1" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2024.06.00" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }

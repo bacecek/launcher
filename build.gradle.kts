@@ -4,3 +4,5 @@ plugins {
     alias(libs.plugins.kotlin.compose.compiler) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
 }
+
+println(com.android.tools.r8.Version.getVersionString())
