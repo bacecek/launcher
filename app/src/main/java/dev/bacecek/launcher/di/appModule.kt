@@ -8,6 +8,8 @@ import dev.bacecek.launcher.apps.AppsRepositoryImpl
 import dev.bacecek.launcher.apps.AppsScreen
 import dev.bacecek.launcher.recent.RecentsRepository
 import dev.bacecek.launcher.recent.RecentsRepositoryImpl
+import dev.bacecek.launcher.make_default.DefaultLauncherRepository
+import dev.bacecek.launcher.make_default.DefaultLauncherRepositoryImpl
 import dev.bacecek.launcher.settings.SettingsPresenter
 import dev.bacecek.launcher.settings.SettingsRepository
 import dev.bacecek.launcher.settings.SettingsRepositoryImpl
@@ -28,8 +30,10 @@ val appModule = module {
     single<CoroutineDispatchers> { RealDispatchers() }
     single<CoroutineScope> { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
 
+    single<DefaultLauncherRepository> { DefaultLauncherRepositoryImpl(get(), get(), get()) }
+
     single<AppsPresenter.Factory> { AppsPresenter.Factory(get(), get(), get(), get()) }
-    single<SettingsPresenter.Factory> { SettingsPresenter.Factory(get()) }
+    single<SettingsPresenter.Factory> { SettingsPresenter.Factory(get(), get()) }
     single<Circuit> { Circuit.Builder()
         .addPresenterFactory(
             get<AppsPresenter.Factory>(),

@@ -33,6 +33,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".make_default.DummyActivity"
+            android:exported="true"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".settings.SettingsActivity"
             android:exported="false"
             android:label="@string/settings_activity_label" />

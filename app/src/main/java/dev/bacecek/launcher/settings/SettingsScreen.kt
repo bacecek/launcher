@@ -23,6 +23,7 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
 import kotlinx.parcelize.Parcelize
 import me.zhanghai.compose.preference.ListPreference
+import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.SwitchPreference
 
@@ -30,6 +31,7 @@ import me.zhanghai.compose.preference.SwitchPreference
 data object SettingsScreen : Screen {
     @Stable
     data class State(
+        val isMakeDefaultAvailable: Boolean,
         val gridSize: Int,
         val availableGridSizes: List<Int>,
         val isRecentsEnabled: Boolean,
@@ -42,6 +44,7 @@ data object SettingsScreen : Screen {
         data class RecentsEnabledChanged(val enabled: Boolean) : Event
         data class ShowTitleChanged(val enabled: Boolean) : Event
         data object BackClicked : Event
+        data object MakeDefaultClicked : Event
     }
 }
 
@@ -74,6 +77,11 @@ fun SettingsScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
             ) {
+                Preference(
+                    title = { Text(text = "Make app default in system") },
+                    enabled = state.isMakeDefaultAvailable,
+                    onClick = { state.eventSink(SettingsScreen.Event.MakeDefaultClicked) },
+                )
                 ListPreference(
                     value = state.gridSize,
                     values = state.availableGridSizes,
@@ -101,6 +109,7 @@ fun SettingsScreen(
 fun PreviewSettingsScreen() {
     SettingsScreen(
         state = SettingsScreen.State(
+            isMakeDefaultAvailable = true,
             gridSize = 4,
             availableGridSizes = listOf(3, 4, 5, 6),
             isRecentsEnabled = true,
