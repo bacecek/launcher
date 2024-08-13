@@ -74,6 +74,9 @@ dependencies {
     implementation(libs.circuit.foundation)
     implementation(libs.circuit.overlays)
 
+    implementation(platform(libs.kotlin.coroutines.bom))
+    implementation(libs.kotlin.coroutines.android)
+
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
 

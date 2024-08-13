@@ -63,8 +63,8 @@ private fun LauncherDialog(
     items: List<Pair<String, AppsScreen.Event>>,
     eventSink: (AppsScreen.Event) -> Unit,
 ) {
-    OverlayEffect(overlay) { host ->
-        host.show(BasicDialogOverlay(
+    OverlayEffect(overlay) {
+        show(BasicDialogOverlay(
             model = Unit,
             onDismissRequest = { eventSink(AppsScreen.Event.OverlayDismissed) },
         ) { _, navigator ->

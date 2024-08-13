@@ -12,10 +12,11 @@ class AndroidScreenStarterImpl(
 ) : AndroidScreenStarter {
     private val launcherApps: LauncherApps by lazy { context.requireSystemService() }
 
-    override fun start(screen: AndroidScreen) {
+    override fun start(screen: AndroidScreen): Boolean {
         when (screen) {
             is LauncherAppsScreen -> screen.startWith(launcherApps)
             is IntentScreen -> context.startActivity(screen.intent, screen.options)
         }
+        return true
     }
 }
