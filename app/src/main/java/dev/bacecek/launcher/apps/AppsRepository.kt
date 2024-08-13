@@ -32,6 +32,9 @@ internal class AppsRepositoryImpl(
     private val userManager: UserManager by lazy { context.requireSystemService() }
     private val launcherApps: LauncherApps by lazy { context.requireSystemService() }
 
+    //TODO(bacecek): explicit backing field
+    private val _apps = MutableStateFlow(emptyList<AppInfo>())
+
     init {
         update()
 
@@ -48,8 +51,6 @@ internal class AppsRepositoryImpl(
         }
     }
 
-    //TODO(bacecek): explicit backing field
-    private val _apps = MutableStateFlow(emptyList<AppInfo>())
     override val apps: Flow<List<AppInfo>>
         get() = _apps
 
