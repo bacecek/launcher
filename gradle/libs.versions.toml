@@ -1,6 +1,6 @@
 [versions]
-agp = "8.7.0-alpha06"
-kotlin = "2.0.20-RC"
+agp = "8.7.0-alpha07"
+kotlin = "2.0.20-RC2"
 
 accompanist = "0.35.0-alpha"
 androidx-lifecycle = "2.8.4"
