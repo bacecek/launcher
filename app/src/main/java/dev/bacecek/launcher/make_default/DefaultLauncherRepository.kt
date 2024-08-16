@@ -21,8 +21,8 @@ class DefaultLauncherRepositoryImpl(
     private val context: Application,
 ) : DefaultLauncherRepository {
 
-    private val _isDefault = MutableStateFlow(false)
-    override val isDefault: StateFlow<Boolean> = _isDefault
+    override val isDefault: StateFlow<Boolean>
+        field = MutableStateFlow(false)
 
     init {
         context.registerActivityLifecycleCallbacks(object : SimpleActivityLifecycleCallbacks() {
@@ -41,7 +41,7 @@ class DefaultLauncherRepositoryImpl(
             } catch (e: Exception) {
                 null
             }
-            _isDefault.value = homePackage == context.packageName
+            isDefault.value = homePackage == context.packageName
         }
     }
 

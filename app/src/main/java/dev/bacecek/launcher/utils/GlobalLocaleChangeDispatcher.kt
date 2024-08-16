@@ -7,12 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import java.util.Locale
 
 class GlobalLocaleChangeDispatcher {
-    private val _flow = MutableStateFlow(Locale.getDefault())
     val flow: StateFlow<Locale>
-        get() = _flow
+        field = MutableStateFlow(Locale.getDefault())
 
     fun dispatch(newConfig: Configuration) {
         val primaryLocale = ConfigurationCompat.getLocales(newConfig)[0] ?: Locale.getDefault()
-        _flow.value = primaryLocale
+        flow.value = primaryLocale
     }
 }
