@@ -53,7 +53,7 @@ fun AppsGrid(
             key = { it.component },
         ) {
             AppIcon(
-                modifier = Modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(),
                 appInfo = it,
                 onAppClicked = onAppClicked,
                 onAppLongClicked = onAppLongClicked,

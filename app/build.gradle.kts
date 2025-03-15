@@ -30,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_23
+        targetCompatibility = JavaVersion.VERSION_23
     }
     buildFeatures {
         compose = true
@@ -48,7 +48,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(23)
     sourceSets.configureEach {
         languageSettings.enableLanguageFeature("ExplicitBackingFields")
     }

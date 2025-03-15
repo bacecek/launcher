@@ -32,6 +32,9 @@ internal class AppsRepositoryImpl(
     private val userManager: UserManager by lazy { context.requireSystemService() }
     private val launcherApps: LauncherApps by lazy { context.requireSystemService() }
 
+    override val apps: Flow<List<AppInfo>>
+        field = MutableStateFlow(emptyList())
+
     init {
         update()
 
@@ -47,9 +50,6 @@ internal class AppsRepositoryImpl(
             }
         }
     }
-
-    override val apps: Flow<List<AppInfo>>
-        field = MutableStateFlow(emptyList<AppInfo>())
 
     override fun update() {
         coroutineScope.launch(dispatchers.io) {
