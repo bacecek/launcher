@@ -70,7 +70,6 @@ internal class AppsRepositoryImpl(
 
     private fun LauncherActivityInfo.toAppInfo(context: Context) = AppInfo(
         name = label.toString(),
-        icon = getIcon(0),
         packageName = applicationInfo.packageName,
         activityClassName = componentName.className,
         component = componentName,

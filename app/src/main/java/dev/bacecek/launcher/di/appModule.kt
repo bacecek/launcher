@@ -2,6 +2,7 @@ package dev.bacecek.launcher.di
 
 import com.slack.circuit.foundation.Circuit
 import dev.bacecek.launcher.apps.AppEventsDispatcher
+import dev.bacecek.launcher.apps.AppIconCache
 import dev.bacecek.launcher.apps.AppsPresenter
 import dev.bacecek.launcher.apps.AppsRepository
 import dev.bacecek.launcher.apps.AppsRepositoryImpl
@@ -26,6 +27,7 @@ val appModule = module {
     single<SettingsRepository> { SettingsRepositoryImpl(get(), get()) }
     single<AppEventsDispatcher> { AppEventsDispatcher(get()) }
     single<GlobalLocaleChangeDispatcher> { GlobalLocaleChangeDispatcher() }
+    single { AppIconCache(get()) }
 
     single<CoroutineDispatchers> { RealDispatchers() }
     single<CoroutineScope> { CoroutineScope(SupervisorJob() + Dispatchers.Default) }

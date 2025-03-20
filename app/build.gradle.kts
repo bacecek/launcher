@@ -30,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_23
-        targetCompatibility = JavaVersion.VERSION_23
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
@@ -48,13 +48,14 @@ android {
 }
 
 kotlin {
-    jvmToolchain(23)
+    jvmToolchain(21)
     sourceSets.configureEach {
         languageSettings.enableLanguageFeature("ExplicitBackingFields")
     }
 }
 
 dependencies {
+    implementation(libs.kotlin.stdlib)
     implementation(libs.accompanist.drawable)
 
     implementation(libs.androidx.activity.compose)

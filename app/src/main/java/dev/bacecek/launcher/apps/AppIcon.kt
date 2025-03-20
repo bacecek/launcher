@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,11 +23,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -36,6 +39,7 @@ fun AppIcon(
     onAppClicked: (AppInfo) -> Unit,
     onAppLongClicked: (AppInfo) -> Unit,
     isTitleVisible: Boolean,
+    iconCache: AppIconCache = koinInject(),
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Column(
@@ -49,8 +53,11 @@ fun AppIcon(
                     indication = null,
                 )
         ) {
+            val icon = remember(appInfo.component, appInfo.user) {
+                iconCache.getIcon(appInfo.component, appInfo.user)
+            }
             Image(
-                painter = rememberDrawablePainter(drawable = appInfo.icon),
+                painter = rememberDrawablePainter(drawable = icon),
                 contentDescription = null,
                 modifier = Modifier.size(56.dp),
                 contentScale = ContentScale.Crop,
@@ -88,7 +95,6 @@ private fun AppIconPreview() {
     AppIcon(
         appInfo = AppInfo(
             name = "App Name",
-            icon = null,
             packageName = "com.example.app",
             component = ComponentName("com.example.app", "com.example.app.MainActivity"),
             activityClassName = null,

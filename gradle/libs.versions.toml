@@ -1,6 +1,6 @@
 [versions]
-agp = "8.10.0-alpha08"
-kotlin = "2.1.20-RC3"
+agp = "8.10.0-beta01"
+kotlin = "2.1.20"
 
 accompanist = "0.37.2"
 
@@ -49,6 +49,7 @@ koin-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin"
 
 kotlin-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android" }
 kotlin-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "coroutines" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 
 preferences-compose = { group = "me.zhanghai.compose.preference", name = "library", version.ref = "preference-compose" }
 

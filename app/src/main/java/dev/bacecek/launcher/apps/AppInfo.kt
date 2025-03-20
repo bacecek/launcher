@@ -1,12 +1,10 @@
 package dev.bacecek.launcher.apps
 
 import android.content.ComponentName
-import android.graphics.drawable.Drawable
 import android.os.UserHandle
 
 data class AppInfo(
     val name: String,
-    val icon: Drawable?,
     val packageName: String,
     val activityClassName: String?,
     val component: ComponentName,
