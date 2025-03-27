@@ -64,7 +64,7 @@ class AppsPresenter(
                     }
                     is Event.AppInfoClicked -> {
                         overlay = null
-                        navigator.goTo(AppDetailsScreen(event.appInfo.component, event.appInfo.user))
+                        navigator.goTo(AppDetailsScreen(event.appInfo.component, event.appInfo.user.toUserHandle()))
                     }
                     is Event.AppUninstallClicked -> {
                         overlay = null
@@ -109,7 +109,7 @@ class AppsPresenter(
     private fun AppInfo.toStartAppInfo() = AppIntentScreen.Info(
         activityClassName = activityClassName,
         packageName = packageName,
-        userHandle = user,
+        userHandle = user.toUserHandle(),
     )
 
     class Factory(

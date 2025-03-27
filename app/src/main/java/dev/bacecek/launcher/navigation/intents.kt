@@ -3,12 +3,12 @@
 package dev.bacecek.launcher.navigation
 
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import com.slack.circuitx.android.IntentScreen
 
 fun UninstallAppScreen(packageName: String) = IntentScreen(
     intent = Intent(Intent.ACTION_DELETE).apply {
-        data = Uri.parse("package:$packageName")
+        data = "package:$packageName".toUri()
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
 )

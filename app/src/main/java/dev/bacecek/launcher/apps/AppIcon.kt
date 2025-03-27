@@ -98,7 +98,7 @@ private fun AppIconPreview() {
             packageName = "com.example.app",
             component = ComponentName("com.example.app", "com.example.app.MainActivity"),
             activityClassName = null,
-            user = UserHandle.getUserHandleForUid(0),
+            user = UserHandleUid(0),
             isSystemApp = false,
         ),
         onAppClicked = {},

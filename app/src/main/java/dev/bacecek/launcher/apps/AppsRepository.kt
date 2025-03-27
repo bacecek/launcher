@@ -73,7 +73,7 @@ internal class AppsRepositoryImpl(
         packageName = applicationInfo.packageName,
         activityClassName = componentName.className,
         component = componentName,
-        user = user,
+        user = UserHandleUid(applicationInfo.uid),
         isSystemApp = applicationInfo.isSystemApp(context),
     )
 

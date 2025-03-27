@@ -14,8 +14,8 @@ class AppIconCache(
     private val launcherApps: LauncherApps by lazy { context.requireSystemService() }
     private val cache = LruCache<CacheKey, Drawable>(DEFAULT_CACHE_SIZE)
 
-    fun getIcon(component: ComponentName, user: UserHandle): Drawable? {
-        val key = CacheKey(component, user)
+    fun getIcon(component: ComponentName, user: UserHandleUid): Drawable? {
+        val key = CacheKey(component, user.toUserHandle())
         return cache[key] ?: loadIcon(key)
     }
 
