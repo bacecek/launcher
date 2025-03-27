@@ -62,7 +62,7 @@ internal class AppsRepositoryImpl(
             .asSequence()
             .flatMap { launcherApps.getActivityList(null, it) }
             .map { it.toAppInfo(context) }
-            .filter { it.packageName != BuildConfig.APPLICATION_ID }
+            .filter { it.component.packageName != BuildConfig.APPLICATION_ID }
             .filter { !FILTERED_COMPONENTS.contains(it.component) }
             .sortedWithCollatorBy(Collator.getInstance(localeChangeDispatcher.flow.value)) { it.name }
             .toList()
@@ -70,8 +70,6 @@ internal class AppsRepositoryImpl(
 
     private fun LauncherActivityInfo.toAppInfo(context: Context) = AppInfo(
         name = label.toString(),
-        packageName = applicationInfo.packageName,
-        activityClassName = componentName.className,
         component = componentName,
         user = UserHandleUid(applicationInfo.uid),
         isSystemApp = applicationInfo.isSystemApp(context),

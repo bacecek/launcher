@@ -95,9 +95,7 @@ private fun AppIconPreview() {
     AppIcon(
         appInfo = AppInfo(
             name = "App Name",
-            packageName = "com.example.app",
             component = ComponentName("com.example.app", "com.example.app.MainActivity"),
-            activityClassName = null,
             user = UserHandleUid(0),
             isSystemApp = false,
         ),

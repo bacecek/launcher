@@ -10,8 +10,6 @@ fun UserHandleUid.toUserHandle() = UserHandleCompat.getUserHandleForUid(value)
 
 data class AppInfo(
     val name: String,
-    val packageName: String,
-    val activityClassName: String?,
     val component: ComponentName,
     val user: UserHandleUid,
     val isSystemApp: Boolean,

@@ -68,7 +68,7 @@ class AppsPresenter(
                     }
                     is Event.AppUninstallClicked -> {
                         overlay = null
-                        navigator.goTo(UninstallAppScreen(event.appInfo.packageName))
+                        navigator.goTo(UninstallAppScreen(event.appInfo.component.packageName))
                     }
                     is Event.WallpaperAndStyleClicked -> {
                         overlay = null
@@ -107,8 +107,8 @@ class AppsPresenter(
     }
 
     private fun AppInfo.toStartAppInfo() = AppIntentScreen.Info(
-        activityClassName = activityClassName,
-        packageName = packageName,
+        activityClassName = component.className,
+        packageName = component.packageName,
         userHandle = user.toUserHandle(),
     )
 
