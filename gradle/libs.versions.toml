@@ -1,22 +1,22 @@
 [versions]
-agp = "8.11.0-alpha03"
-kotlin = "2.1.20"
+agp = "8.11.0-alpha09"
+kotlin = "2.2.0-Beta2"
 
-accompanist = "0.37.2"
+accompanist = "0.37.3"
 
 androidx-activity = "1.10.1"
-androidx-compose = "2025.03.00"
-androidx-core = "1.15.0"
-androidx-datastore = "1.1.3"
+androidx-compose = "2025.04.01"
+androidx-core = "1.16.0"
+androidx-datastore = "1.1.5"
 androidx-lifecycle = "2.8.7"
 
-circuit = "0.27.0"
-coroutines = "1.10.1"
-koin = "4.0.2"
+circuit = "0.27.1"
+coroutines = "1.10.2"
+koin = "4.0.4"
 
 junit4 = "4.13.2"
 
-preference-compose = "1.0.0"
+preference-compose = "1.1.1"
 
 [libraries]
 accompanist-drawable = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist" }
@@ -41,7 +41,7 @@ circuit-android = { group = "com.slack.circuit", name = "circuitx-android", vers
 circuit-foundation = { group = "com.slack.circuit", name = "circuit-foundation", version.ref = "circuit" }
 circuit-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", version.ref = "circuit" }
 
-junit = { group = "junit", name = "junit", version = "junit4" }
+junit = { group = "junit", name = "junit", version.ref = "junit4" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
