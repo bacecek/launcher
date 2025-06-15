@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "dev.bacecek.launcher"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "dev.bacecek.launcher"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
