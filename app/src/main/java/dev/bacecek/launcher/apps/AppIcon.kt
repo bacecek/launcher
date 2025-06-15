@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-import org.koin.compose.koinInject
+import dev.bacecek.launcher.di.DI
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,7 +39,7 @@ fun AppIcon(
     onAppClicked: (AppInfo) -> Unit,
     onAppLongClicked: (AppInfo) -> Unit,
     isTitleVisible: Boolean,
-    iconCache: AppIconCache = koinInject(),
+    iconCache: AppIconCache = DI.graph.appIconCache,
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Column(

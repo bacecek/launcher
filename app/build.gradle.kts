@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.metro)
 }
 
 android {
@@ -89,11 +90,9 @@ dependencies {
     implementation(platform(libs.kotlin.coroutines.bom))
     implementation(libs.kotlin.coroutines.android)
 
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
+    implementation(libs.metro.runtime)
 
     implementation(libs.preferences.compose)
 
     testImplementation(libs.junit)
-    testImplementation(libs.koin.junit4)
 }

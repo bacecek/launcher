@@ -12,7 +12,8 @@ androidx-lifecycle = "2.9.1"
 
 circuit = "0.28.1"
 coroutines = "1.10.2"
-koin = "4.1.0"
+
+metro = "0.3.7"
 
 junit4 = "4.13.2"
 
@@ -43,9 +44,6 @@ circuit-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", ve
 
 junit = { group = "junit", name = "junit", version.ref = "junit4" }
 
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
-koin-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
 kotlin-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android" }
 kotlin-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "coroutines" }
@@ -53,8 +51,11 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 
 preferences-compose = { group = "me.zhanghai.compose.preference", name = "library", version.ref = "preference-compose" }
 
+metro-runtime = { group = "dev.zacsweers.metro", name = "runtime", version.ref = "metro" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
