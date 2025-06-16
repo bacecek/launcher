@@ -16,10 +16,11 @@ import com.slack.circuitx.android.rememberAndroidScreenAwareNavigator
 import dev.bacecek.launcher.apps.AppsScreen
 import dev.bacecek.launcher.navigation.AndroidScreenStarterImpl
 import dev.bacecek.launcher.ui.theme.ApplicationTheme
-import org.koin.android.ext.android.inject
+import dev.bacecek.launcher.di.DI
 
 class MainActivity : ComponentActivity() {
-    private val circuit: Circuit by inject()
+    private val circuit: Circuit
+        get() = DI.graph.circuit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
