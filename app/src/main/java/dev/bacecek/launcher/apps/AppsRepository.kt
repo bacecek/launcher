@@ -9,6 +9,7 @@ import android.icu.text.Collator
 import android.os.UserManager
 import dev.bacecek.launcher.BuildConfig
 import dev.bacecek.launcher.di.CoroutineDispatchers
+import dev.bacecek.launcher.apps.AppIconCache
 import dev.bacecek.launcher.utils.GlobalLocaleChangeDispatcher
 import dev.bacecek.launcher.utils.requireSystemService
 import dev.bacecek.launcher.utils.sortedWithCollatorBy
@@ -28,6 +29,7 @@ internal class AppsRepositoryImpl(
     private val coroutineScope: CoroutineScope,
     private val appsEventsDispatcher: AppEventsDispatcher,
     private val localeChangeDispatcher: GlobalLocaleChangeDispatcher,
+    private val iconCache: AppIconCache,
 ) : AppsRepository {
     private val userManager: UserManager by lazy { context.requireSystemService() }
     private val launcherApps: LauncherApps by lazy { context.requireSystemService() }
@@ -73,6 +75,7 @@ internal class AppsRepositoryImpl(
         component = componentName,
         user = UserHandleUid(applicationInfo.uid),
         isSystemApp = applicationInfo.isSystemApp(context),
+        icon = iconCache.getIcon(componentName, UserHandleUid(applicationInfo.uid)),
     )
 
     private fun ApplicationInfo.isSystemApp(context: Context): Boolean {

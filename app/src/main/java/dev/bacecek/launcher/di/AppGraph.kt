@@ -59,8 +59,9 @@ interface AppGraph {
         scope: CoroutineScope,
         events: AppEventsDispatcher,
         localeChangeDispatcher: GlobalLocaleChangeDispatcher,
+        iconCache: AppIconCache,
     ): AppsRepository =
-        AppsRepositoryImpl(application, dispatchers, scope, events, localeChangeDispatcher)
+        AppsRepositoryImpl(application, dispatchers, scope, events, localeChangeDispatcher, iconCache)
 
     @Provides
     fun provideRecentsRepository(
