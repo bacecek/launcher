@@ -1,7 +1,6 @@
 package dev.bacecek.launcher.apps
 
 import android.content.ComponentName
-import android.os.UserHandle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -23,13 +22,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-import dev.bacecek.launcher.di.DI
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,7 +36,6 @@ fun AppIcon(
     onAppClicked: (AppInfo) -> Unit,
     onAppLongClicked: (AppInfo) -> Unit,
     isTitleVisible: Boolean,
-    iconCache: AppIconCache = DI.graph.appIconCache,
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Column(
@@ -53,11 +49,8 @@ fun AppIcon(
                     indication = null,
                 )
         ) {
-            val icon = remember(appInfo.component, appInfo.user) {
-                iconCache.getIcon(appInfo.component, appInfo.user)
-            }
             Image(
-                painter = rememberDrawablePainter(drawable = icon),
+                painter = rememberDrawablePainter(drawable = appInfo.icon),
                 contentDescription = null,
                 modifier = Modifier.size(56.dp),
                 contentScale = ContentScale.Crop,
@@ -98,6 +91,7 @@ private fun AppIconPreview() {
             component = ComponentName("com.example.app", "com.example.app.MainActivity"),
             user = UserHandleUid(0),
             isSystemApp = false,
+            icon = null,
         ),
         onAppClicked = {},
         onAppLongClicked = {},
